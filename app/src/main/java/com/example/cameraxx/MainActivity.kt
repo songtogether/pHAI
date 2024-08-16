@@ -44,7 +44,8 @@ class MainActivity : AppCompatActivity() {
 
     private val handler = Handler(Looper.getMainLooper())
     private lateinit var timerTextView: TextView
-    private var countdownTime = 8
+    private var countdownTime = 10
+    private var photoCount = 0 // 연속 촬영에서 찍힌 사진의 개수를 저장하는 변수
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -128,10 +129,11 @@ class MainActivity : AppCompatActivity() {
     private fun toggleContinuousCapture() {
         isContinuousCapturing = !isContinuousCapturing
         if (isContinuousCapturing) {
-            countdownTime = 8
+            countdownTime = 10
+            photoCount = 0 // 카운트 초기화
             updateTimer()
             Toast.makeText(this, "Continuous Capture Started", Toast.LENGTH_SHORT).show()
-            handler.postDelayed({startContinuousCapture()}, 8000)
+            handler.postDelayed({startContinuousCapture()}, 10000)
         } else {
             Toast.makeText(this, "Continuous Capture Stopped", Toast.LENGTH_SHORT).show()
             handler.removeCallbacksAndMessages(null)
@@ -186,10 +188,13 @@ class MainActivity : AppCompatActivity() {
         }, ContextCompat.getMainExecutor(this))
     }
     private fun startContinuousCapture() {
-        if (isContinuousCapturing) {
+        if (isContinuousCapturing && photoCount < 10) { // 10장 이하일 때만 촬영
             takePhoto()
-            // 1초에 한 번 사진을 찍도록 설정 (1000 밀리초)
-            handler.postDelayed({ startContinuousCapture() }, 1000)
+            photoCount++
+            handler.postDelayed({ startContinuousCapture() }, 500)
+        } else {
+            isContinuousCapturing = false
+            Toast.makeText(this, "Continuous Capture Completed", Toast.LENGTH_SHORT).show()
         }
     }
 

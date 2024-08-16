@@ -123,7 +123,7 @@
         android:layout_above="@id/continuousCaptureButton"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="16dp"
-        android:text="8"
+        android:text="10"
         tools:ignore="MissingConstraints" />
 
     <androidx.constraintlayout.widget.Guideline
